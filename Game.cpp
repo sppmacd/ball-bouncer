@@ -27,6 +27,7 @@ bool Game::load()
 
     m_gameOverTick = -2;
     m_balls.push_back(spawnEntity<Ball>());
+    m_bouncerForce = 4;
     return true;
 }
 
@@ -117,6 +118,7 @@ void Game::setup()
     m_balls.clear();
     m_balls.push_back(spawnEntity<Ball>());
     m_currentTip = 0;
+    m_bouncerForce = 4;
 }
 
 void Game::tick()
@@ -149,6 +151,8 @@ void Game::tick()
 
     if(m_gameOverTick == -1)
     {
+        if(m_bouncerForce > 5)
+            m_bouncerForce -= 0.0016;
         if(m_tickCount % 60 == 0)
         {
             m_score++;
@@ -158,9 +162,14 @@ void Game::tick()
             if(m_score % 15 == 0 && m_score > 0)
             {
                 spawnMultipleParticles(10, 20, Particle::Good);
+                playSound(m_resources.newBallSound);
                 m_balls.push_back(spawnEntity<Ball>());
                 for(auto& ball: m_balls)
                     ball->addMotion(0, -12);
+
+                // In 15 seconds (900 ticks) bouncer force changes by 1.44. This should not make
+                // force greater than it was before.
+                m_bouncerForce += 1.3;
             }
         }
         for(auto& ball: m_balls)
@@ -169,6 +178,7 @@ void Game::tick()
             {
                 m_gameOverTick = 120;
                 m_gameTickCount = 0;
+                m_bouncerForce = 4;
                 break;
             }
         }

@@ -36,10 +36,9 @@ void Box::onCollide(Entity& other)
     auto ball = dynamic_cast<Ball*>(&other);
     if(ball)
     {
-        float fac = std::min(1.5f, 1.1f * WARMUP_TICKS / (m_game.gameTickCount() + 1));
+        float fac = m_game.bouncerForce();
         ball->m_motion.x += ball->m_motion.x > 0 ? fac : -fac;
-        ball->m_motion.y += ball->m_motion.y > 0 ? fac : -fac;
-        ball->m_motion.y -= std::min(7.f, std::max(1.f, WARMUP_TICKS * 8 / (std::min(WARMUP_TICKS, m_game.gameTickCount() + 1.f))));
+        ball->m_motion.y -= fac;
     }
     m_game.spawnParticles(m_rectangle.getPosition(), 10, Particle::Good);
     setDead();

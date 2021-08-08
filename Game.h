@@ -48,6 +48,8 @@ public:
 
     void playSound(sf::SoundBuffer const& buffer);
 
+    double bouncerForce() const { return m_bouncerForce; }
+
 private:
     void handleEvent(sf::Event const&);
     void tick();
@@ -75,4 +77,5 @@ private:
     int m_score = 0;
     int m_gameOverTick = 30;
     size_t m_boxCount = 0;
+    double m_bouncerForce = 0;
 };
