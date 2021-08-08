@@ -243,6 +243,8 @@ void Game::tick()
         float rx = rand() % static_cast<int>(MAP_BOUNDS * 2) - MAP_BOUNDS;
         float ry = rand() % static_cast<int>(MAP_BOUNDS * 2) - MAP_BOUNDS;
         spawnParticles({rx, ry}, 20, Particle::Bad);
+        if(rand() % 6 == 0)
+            playSound(m_resources.gameOverSound);
         m_gameOverTick--;
     }
 }

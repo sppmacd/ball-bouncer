@@ -24,6 +24,8 @@ bool Resources::load()
         return false;
     if(!errorSound.loadFromFile("res/error.wav"))
         return false;
+    if(!gameOverSound.loadFromFile("res/game-over.wav"))
+        return false;
 
     return true;
 }
