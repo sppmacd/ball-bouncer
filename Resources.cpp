@@ -20,6 +20,8 @@ bool Resources::load()
         return false;
     if(!newBallSound.loadFromFile("res/new-ball.wav"))
         return false;
+    if(!errorSound.loadFromFile("res/error.wav"))
+        return false;
 
     return true;
 }

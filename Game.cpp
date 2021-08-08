@@ -6,15 +6,46 @@
 #include "PowerBox.h"
 
 #include <array>
+#include <fstream>
 #include <iomanip>
 #include <iostream>
 #include <sstream>
+
+Game::~Game()
+{
+    // Save highscore
+    m_highScore = m_score;
+    std::ofstream file("playerdata.txt");
+    file << m_highScore;
+}
 
 bool Game::load()
 {
     if(!m_resources.load())
         return false;
 
+    // Sounds
+    if(m_backgroundMusic.openFromFile("res/music.wav"))
+    {
+        m_backgroundMusic.setLoop(true);
+        m_backgroundMusic.play();
+    }
+
+    // Game
+    m_gameOverTick = -2;
+    m_balls.push_back(spawnEntity<Ball>());
+    m_bouncerForce = 4;
+
+    std::ifstream file("playerdata.txt");
+    if(!file.good())
+    {
+        std::cout << "No playerdata.txt file found" << std::endl;
+        m_highScore = 0;
+    }
+    // Don't care about errors.
+    file >> m_highScore;
+    
+    // Window
     m_window.create(sf::VideoMode::getDesktopMode(), "Ball Bouncer");
     m_window.setFramerateLimit(60);
 
@@ -25,9 +56,6 @@ bool Game::load()
     resizeEvent.size.height = m_window.getSize().y;
     handleEvent(resizeEvent);
 
-    m_gameOverTick = -2;
-    m_balls.push_back(spawnEntity<Ball>());
-    m_bouncerForce = 4;
     return true;
 }
 
@@ -82,6 +110,7 @@ void Game::handleEvent(sf::Event const& event)
                 else
                 {
                     addSplash("No bouncers", pos);
+                    playSound(m_resources.errorSound);
                 }
             }
         } break;
@@ -158,6 +187,8 @@ void Game::tick()
             m_score++;
             if(m_score % 2 == 0)
                 m_boxCount += 3;
+            if(m_score > m_highScore && m_highScore != 0)
+                m_highScore = m_score;
 
             if(m_score % 15 == 0 && m_score > 0)
             {
@@ -176,9 +207,7 @@ void Game::tick()
         {
             if(ball->speed() < 0.3)
             {
-                m_gameOverTick = 120;
-                m_gameTickCount = 0;
-                m_bouncerForce = 4;
+                gameOver();
                 break;
             }
         }
@@ -218,6 +247,16 @@ void Game::tick()
     }
 }
 
+void Game::gameOver()
+{
+    m_gameOverTick = 120;
+    m_gameTickCount = 0;
+    m_bouncerForce = 4;
+    m_highScore = m_score;
+    std::ofstream file("playerdata.txt");
+    file << m_highScore;
+}
+
 sf::Color operator*(sf::Color const& in, float m)
 {
     return {static_cast<sf::Uint8>(in.r*m), static_cast<sf::Uint8>(in.g*m), static_cast<sf::Uint8>(in.b*m), static_cast<sf::Uint8>(in.a*m)};
@@ -243,6 +282,15 @@ void Game::render(sf::RenderTarget& target)
         scoreText.setOrigin(scoreText.getGlobalBounds().getSize().x / 2.f, 0);
         scoreText.setScale(0.5, 0.5);
         target.draw(scoreText);
+
+        if(m_highScore > 0)
+        {
+            sf::Text highscoreText("(Highscore: " + std::to_string(m_highScore) + ")", m_resources.font, 30);
+            highscoreText.setPosition(0, -MAP_BOUNDS + 80);
+            highscoreText.setOrigin(highscoreText.getGlobalBounds().getSize().x / 2.f, 0);
+            highscoreText.setScale(0.5, 0.5);
+            target.draw(highscoreText);
+        }
 
         sf::Text bouncersText("BOUNCERS: " + std::to_string(m_boxCount), m_resources.font, 30);
         bouncersText.setPosition(-MAP_BOUNDS + 25, -MAP_BOUNDS + 25);
@@ -313,6 +361,15 @@ void Game::render(sf::RenderTarget& target)
         gameOverTextSpace.setOrigin(gameOverTextSpace.getLocalBounds().getSize() / 2.f);
         gameOverTextSpace.setPosition(0, 60);
         target.draw(gameOverTextSpace);
+
+        if(m_highScore > 0)
+        {
+            sf::Text highscoreText("Highscore: " + std::to_string(m_highScore), m_resources.font, 30);
+            highscoreText.setPosition(0, -20);
+            highscoreText.setOrigin(highscoreText.getGlobalBounds().getSize().x / 2.f, 0);
+            highscoreText.setScale(0.5, 0.5);
+            target.draw(highscoreText);
+        }
     }
 
     for(auto& splash: m_splashes)
@@ -356,5 +413,7 @@ void Game::spawnMultipleParticles(size_t centerCount, size_t count, Particle::Ty
 void Game::playSound(sf::SoundBuffer const& buffer)
 {
     m_sounds.emplace_back(buffer);
-    m_sounds.back().play();
+    auto& sound = m_sounds.back();
+    sound.setVolume(50);
+    sound.play();
 }

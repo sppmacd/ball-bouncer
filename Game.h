@@ -14,6 +14,8 @@ class Game
 public:
     static constexpr auto TIP_TIME = 180;
 
+    ~Game();
+
     bool load();
     void run();
 
@@ -45,10 +47,9 @@ public:
     constexpr static float GRAVITY = 0.5;
 
     void addSplash(sf::String text, sf::Vector2f position) { m_splashes.push_back({text, position}); }
-
     void playSound(sf::SoundBuffer const& buffer);
-
     double bouncerForce() const { return m_bouncerForce; }
+    void gameOver();
 
 private:
     void handleEvent(sf::Event const&);
@@ -75,7 +76,9 @@ private:
     size_t m_tickCount = 0;
     size_t m_gameTickCount = 0;
     int m_score = 0;
+    int m_highScore = 0;
     int m_gameOverTick = 30;
     size_t m_boxCount = 0;
     double m_bouncerForce = 0;
+    sf::Music m_backgroundMusic;
 };
