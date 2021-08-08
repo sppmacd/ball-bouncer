@@ -155,7 +155,7 @@ void Ball::update()
 
     if(speed() < 2)
     {
-        int otherColors = m_game.tickCount() / 10 % 2 == 0 ? 255 : 0;
+        int otherColors = m_game.tickCount() / 10 % 2 == 0 ? 255 : 100;
         m_sprite.setColor(sf::Color(255, otherColors, otherColors));
     }
     else
