@@ -180,7 +180,7 @@ void Game::tick()
 
     if(m_gameOverTick == -1)
     {
-        if(m_bouncerForce > 5)
+        if(m_bouncerForce > 7)
             m_bouncerForce -= 0.0016;
         if(m_tickCount % 60 == 0)
         {
