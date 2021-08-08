@@ -52,7 +52,10 @@ void Ball::update()
     if(std::abs(ballPositionAfterMove.y) > MAP_BOUNDS)
     {
         // Bounce
-        m_motion.y = -m_motion.y * BOUNCINESS;
+        if(ballPositionAfterMove.y > MAP_BOUNDS)
+            m_motion.y = -m_motion.y * BOUNCINESS_FLOOR;
+        else
+            m_motion.y = -m_motion.y * BOUNCINESS;
 
         // Friction
         if(std::abs(m_motion.x) + FRICTION > MIN_NONZERO_VELOCITY)

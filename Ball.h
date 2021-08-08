@@ -11,7 +11,8 @@ public:
     Ball(Game&);
 
     // TODO: Make it surface-dependent
-    constexpr static float BOUNCINESS = 0.95;
+    constexpr static float BOUNCINESS = 0.75;
+    constexpr static float BOUNCINESS_FLOOR = 0.95;
     constexpr static float FRICTION = 0.01;
 
     constexpr static float MIN_NONZERO_VELOCITY = FRICTION * 2;
