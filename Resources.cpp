@@ -18,6 +18,8 @@ bool Resources::load()
         return false;
     if(!bouncerDeathSound.loadFromFile("res/bouncer-death.wav"))
         return false;
+    if(!newBallSound.loadFromFile("res/new-ball.wav"))
+        return false;
 
     return true;
 }

@@ -12,6 +12,7 @@ struct Resources
     sf::SoundBuffer bouncerSound;
     sf::SoundBuffer bouncerBadSound;
     sf::SoundBuffer bouncerDeathSound;
+    sf::SoundBuffer newBallSound;
 
     bool load();
 };
