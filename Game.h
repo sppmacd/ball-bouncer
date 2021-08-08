@@ -46,6 +46,8 @@ public:
 
     void addSplash(sf::String text, sf::Vector2f position) { m_splashes.push_back({text, position}); }
 
+    void playSound(sf::SoundBuffer const& buffer);
+
 private:
     void handleEvent(sf::Event const&);
     void tick();
@@ -64,6 +66,7 @@ private:
     };
 
     std::list<Splash> m_splashes;
+    std::list<sf::Sound> m_sounds;
     sf::String m_tip;
     size_t m_currentTip = 0;
     bool m_running = true;

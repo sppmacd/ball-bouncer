@@ -9,9 +9,10 @@ add_executable(ball
 	"Helpers.cpp"
 	"Particle.cpp"
 	"PowerBox.cpp"
+	"Resources.cpp"
 	"main.cpp"
 )
-target_link_libraries(ball PUBLIC sfml-graphics)
+target_link_libraries(ball PUBLIC sfml-graphics sfml-audio)
 
 if(${MINGW})
 	target_compile_options(ball PUBLIC -static -static-libgcc -static-libstdc++)

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 struct Resources
 {
@@ -8,4 +9,9 @@ struct Resources
     sf::Texture goodBouncerTexture;
     sf::Texture badBouncerTexture;
     sf::Font font;
+    sf::SoundBuffer bouncerSound;
+    sf::SoundBuffer bouncerBadSound;
+    sf::SoundBuffer bouncerDeathSound;
+
+    bool load();
 };

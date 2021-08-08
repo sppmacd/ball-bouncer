@@ -12,13 +12,7 @@
 
 bool Game::load()
 {
-    if(!m_resources.ballTexture.loadFromFile("res/ball.png"))
-        return false;
-    if(!m_resources.goodBouncerTexture.loadFromFile("res/good-bouncer.png"))
-        return false;
-    if(!m_resources.badBouncerTexture.loadFromFile("res/bad-bouncer.png"))
-        return false;
-    if(!m_resources.font.loadFromFile("res/font.ttf"))
+    if(!m_resources.load())
         return false;
 
     m_window.create(sf::VideoMode::getDesktopMode(), "Ball Bouncer");
@@ -132,11 +126,26 @@ void Game::tick()
         entity->update();
     }
 
-    auto remove = std::remove_if(m_entities.begin(), m_entities.end(), [](auto& entity) {
-        return entity->isDead();
-    });
-    if(remove != m_entities.end())
-        m_entities.erase(remove, m_entities.end());
+    // Cleanup dead entities
+    {
+        auto remove = std::remove_if(m_entities.begin(), m_entities.end(), [](auto& entity) {
+            return entity->isDead();
+        });
+        if(remove != m_entities.end())
+            m_entities.erase(remove, m_entities.end());
+    }
+
+    // Cleanup stopped sounds
+    {
+        for(auto it = m_sounds.begin(); it != m_sounds.end();)
+        {
+            auto thisIt = it++;
+            if(thisIt->getStatus() == sf::Sound::Stopped)
+            {
+                m_sounds.erase(thisIt);
+            }
+        }
+    }
 
     if(m_gameOverTick == -1)
     {
@@ -181,7 +190,7 @@ void Game::tick()
                 "Bouncers add speed to ball",
                 "A new ball spawns every 15 seconds",
                 "Don't let any ball stop!",
-                "Red boxes can have a surprise!",
+                "Red boxes may contain a surprise!",
             };
             m_tip = TIPS[m_currentTip];
             m_currentTip++;
@@ -332,4 +341,10 @@ void Game::spawnMultipleParticles(size_t centerCount, size_t count, Particle::Ty
         float ry = rand() % static_cast<int>(MAP_BOUNDS * 2) - MAP_BOUNDS;
         spawnParticles({rx, ry}, count, type);
     }
+}
+
+void Game::playSound(sf::SoundBuffer const& buffer)
+{
+    m_sounds.emplace_back(buffer);
+    m_sounds.back().play();
 }

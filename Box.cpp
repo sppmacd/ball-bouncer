@@ -24,6 +24,7 @@ void Box::update()
     {
         m_game.spawnParticles(m_rectangle.getPosition(), 10, Particle::Bad);
         setDead();
+        m_game.playSound(m_game.resources().bouncerDeathSound);
     }
 
     double lifetimeFactor = m_lifetime / 180.0;
@@ -42,4 +43,5 @@ void Box::onCollide(Entity& other)
     }
     m_game.spawnParticles(m_rectangle.getPosition(), 10, Particle::Good);
     setDead();
+    m_game.playSound(m_game.resources().bouncerSound);
 }
