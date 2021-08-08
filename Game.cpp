@@ -266,7 +266,7 @@ void Game::render(sf::RenderTarget& target)
 {
     sf::RectangleShape rs({(MAP_BOUNDS - Ball::RADIUS) * 2, (MAP_BOUNDS - Ball::RADIUS) * 2});
     rs.setOrigin(rs.getSize() / 2.f);
-    rs.setFillColor(sf::Color(0, 128, 200));
+    rs.setTexture(&m_resources.backgroundTexture);
     target.draw(rs);
 
     for(auto& entity: m_entities)

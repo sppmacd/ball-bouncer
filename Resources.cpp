@@ -8,6 +8,8 @@ bool Resources::load()
         return false;
     if(!badBouncerTexture.loadFromFile("res/bad-bouncer.png"))
         return false;
+    if(!backgroundTexture.loadFromFile("res/background.png"))
+        return false;
 
     if(!font.loadFromFile("res/font.ttf"))
         return false;

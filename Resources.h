@@ -8,6 +8,7 @@ struct Resources
     sf::Texture ballTexture;
     sf::Texture goodBouncerTexture;
     sf::Texture badBouncerTexture;
+    sf::Texture backgroundTexture;
     sf::Font font;
     sf::SoundBuffer bouncerSound;
     sf::SoundBuffer bouncerBadSound;
