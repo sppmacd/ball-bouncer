@@ -14,6 +14,10 @@ add_executable(ball
 )
 target_link_libraries(ball PUBLIC sfml-graphics sfml-audio)
 
+set(CMAKE_INSTALL_PREFIX ${CMAKE_BINARY_DIR}/root)
+install(TARGETS ball RUNTIME DESTINATION .)
+install(DIRECTORY res DESTINATION .)
+
 if(${MINGW})
 	target_compile_options(ball PUBLIC -static -static-libgcc -static-libstdc++)
 	target_link_options(ball PUBLIC -static -static-libgcc -static-libstdc++)
