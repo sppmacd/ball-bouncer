@@ -75,7 +75,7 @@ void Ball::update()
     {
         if(entity.get() != this)
         {
-            if(!entity->isDead() && entity->boundingBox().intersects(boundingBox()))
+            if(entity->boundingBox().intersects(boundingBox()))
             {
                 entity->onCollide(*this);
             }
